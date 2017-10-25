@@ -1,0 +1,19 @@
+{
+  "name": "hw4",
+  "version": "1.0.0",
+  "description": "SE HW4",
+  "main": "code.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.ncsu.edu/ssrivas8/HW4"
+  },
+  "author": "sumit",
+  "license": "ISC",
+  "dependencies": {
+    "esprima": "^4.0.0",
+    "estraverse": "^4.2.0"
+  }
+}
