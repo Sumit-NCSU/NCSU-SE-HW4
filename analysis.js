@@ -1,5 +1,5 @@
 var esprima = require("esprima");
-var estraverse = require("estraverse");
+//var estraverse = require("estraverse");
 var fs = require("fs");
 var options = {tokens:true, tolerant: true, loc: true, range: true };
 
@@ -158,7 +158,7 @@ function complexity(filePath) {
 			});
 
 			// Max Message Chains
-			builder.MaxMessageChains = maxMessageChains(node.body);
+			// builder.MaxMessageChains = maxMessageChains(node.body);
 
 			builders[builder.FunctionName] = builder;
 		}
@@ -179,28 +179,28 @@ function complexity(filePath) {
 }
 
 //Helper Function for MaxMessageChains
-function maxMessageChains(body) {
-    var max = 0;
-    estraverse.traverse(body, {
-		enter: function(node) {
-			if (node.type == 'MemberExpression') {
-				var count = 0;
-				var inner = node;
-				estraverse.traverse(inner, {
-					enter: function(obj){
-						if (obj.property){
-							count += 1;
-						}
-					}
-				});            
-				if(count > max){
-					max = count;
-				}                                
-			}
-		}
-	});
-    return max;
-}
+// function maxMessageChains(body) {
+//     var max = 0;
+//     estraverse.traverse(body, {
+// 		enter: function(node) {
+// 			if (node.type == 'MemberExpression') {
+// 				var count = 0;
+// 				var inner = node;
+// 				estraverse.traverse(inner, {
+// 					enter: function(obj){
+// 						if (obj.property){
+// 							count += 1;
+// 						}
+// 					}
+// 				});
+// 				if(count > max){
+// 					max = count;
+// 				}
+// 			}
+// 		}
+// 	});
+//     return max;
+// }
 
 // Helper function for counting children of node.
 function childrenLength(node) {
