@@ -28,7 +28,7 @@ function FunctionBuilder() {
 	// The number of parameters for functions
 	this.ParameterCount  = 0,
 	// Number of if statements/loops + 1
-	this.SimpleCyclomaticComplexity = 0;
+	this.SimpleCyclomaticComplexity = 1;
 	// The max depth of scopes (nested ifs, loops, etc)
 	this.MaxNestingDepth    = 0;
 	// The max number of conditions if one decision statement.
@@ -105,7 +105,7 @@ function complexity(filePath) {
 
 			// temp
 			var tempmax = 0;
-			var j =0;
+			var tempMsgMax=0;
 
 			traverseWithParents(node, function(child) {
 				// Return statements per function
@@ -125,35 +125,36 @@ function complexity(filePath) {
 					builder.MaxNestingDepth = Math.max(builder.MaxNestingDepth,tempmax);
 				}
 				tempmax = 0;
+
 				//Max Conditions using multiple visitors only for If statements
+				var counter = 0;
 				if (child.type === 'IfStatement') {
-					var counter = 1;					
+					fileBuilder.AllConditions++;
 					traverseWithParents(child, function(cond) {	
 						if (cond.type === 'LogicalExpression') {
 							counter++;
-							// fileBuilder.AllConditions++;
 						}			
 					});
-					fileBuilder.AllConditions = fileBuilder.AllConditions + counter - 2;
-					if(builder.MaxConditions < counter) {
+					if (counter > 0) {
+						fileBuilder.AllConditions = fileBuilder.AllConditions + counter;
+						fileBuilder.AllConditions--;
+					}
+					if(builder.MaxConditions <= counter) {
 						builder.MaxConditions = counter;
 					}
+					counter=0;
 				}
 
 				// Max Message Chains using multiple visitors
-				var tempMsgMax=0;
-				if (child.type === 'ExpressionStatement' && 
-						(child.expression.type === 'MemberExpression' || child.expression.type === 'CallExpression')) {
+				if(child.type === "MemberExpression"){
 					traverseWithParents(child, function (inner) {
-					if(inner.type === 'ExpressionStatement') {
-						tempMsgMax=0;
-					} else if(inner.type === 'MemberExpression') {
-						tempMsgMax++;
-					}					
+						if(inner.type === 'MemberExpression') {
+							tempMsgMax++;
+						}
 					});
-					builder.MaxMessageChains = Math.max(builder.MaxMessageChains, tempMsgMax);					
 				}
-
+				builder.MaxMessageChains = Math.max(builder.MaxMessageChains, tempMsgMax);
+				tempMsgMax = 0;
 			});
 
 			// Max Message Chains
